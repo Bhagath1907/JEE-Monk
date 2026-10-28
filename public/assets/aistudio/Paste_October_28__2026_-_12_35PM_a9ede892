@@ -1,0 +1,315 @@
+Build a complete, ultra-clean, minimalist, production-grade React + Tailwind CSS + Lucide Icons web application called **"JEE Monk OS"** (Target Exam Date: January 20, 2027).
+
+### 1. DESIGN SYSTEM & UI PHILOSOPHY (CRITICAL: DO NOT MAKE IT CLUTTERED)
+The user found previous dashboards "too clumsy and visually heavy." You MUST follow a strict **Linear / Raycast / Vercel minimalist aesthetic**:
+- **Color Palette:** Deep Zinc/Slate monochromatic dark mode (`bg-zinc-950` main canvas, `bg-zinc-900/60` subtle cards, `border-zinc-800/80` crisp 1px borders, soft zinc-400 secondary text, crisp zinc-100 primary text). Use subtle semantic accents only where needed (Indigo for active focus, Emerald for mastered/marks, Amber for JEE Twist insights).
+- **Whitespace & Typography:** Generous padding (`p-6` to `p-8`), clean typographic hierarchy, scannable pills, zero visual clutter.
+- **Progressive Disclosure (No Cramming!):** Never put everything on one screen. Use a sleek **Left Sidebar Navigation** (with collapse support on mobile) and clean **Modal/Drawer overlays** for the embedded YouTube player and AI Prompts so the main workspace remains calm and Zen-like.
+- **Persistence:** Save all state (`activeChapterId`, `dayMode`, `progress` per chapter, `commits` streak, `bugs` log) to `localStorage` under `'jee_monk_studio_v2'`, and provide a clean Export/Import JSON backup modal in the sidebar footer.
+
+---
+
+### 2. APPLICATION LAYOUT & 4 CLEAN VIEWS
+
+#### A. Slim Top Telemetry Bar (Sticky, `h-14`, ultra-clean)
+1. **Left:** Current View Title + Live Countdown pill (`X Days to Jan 20, 2027`).
+2. **Center:** Sleek **Projected JEE Score Meter**:
+   - Displays `Projected Score: X / 220 Marks` with a thin, elegant progress bar (`h-1.5 w-48 bg-zinc-800`) and a subtle marker at `160 Marks (98%ile Target)`.
+   - Score math: Each chapter has a `marks` value. Checking Step 1 adds `20%` of that chapter's marks, Step 2 adds `30%`, Step 3 adds `50%`.
+3. **Right:** 
+   - **Day Mode Pill Toggle:** Switch between `🏠 Home Day (Full Monk: 8-10h)` and `🎒 College Day (Stealth: 4h)`.
+   - **Daily Streak Commit Button:** `🔥 X Day Streak` button that logs today's date (`YYYY-MM-DD`) as committed and shows a tiny 14-day dot indicator.
+
+#### B. View 1: "Zen Monk Focus" (Default View — Distraction-Free Execution)
+Display ONLY the currently active chapter in a clean, centered container (`max-w-4xl mx-auto`):
+1. **Chapter Header Card:**
+   - Top metadata pills: Subject (`Physics` / `Chemistry` / `Math`), Class Tag (`12th PUC Sync` or `11th High-ROI`), Dependency Chain name, and a prominent `+X JEE Marks` emerald badge.
+   - Large, clean Chapter Title + a subtle `"Switch / Next Chapter ➔"` button.
+   - Mode context line: If `Home Day`, show *"Monk Protocol: Finish all 3 steps today before switching subjects."* If `College Day`, show *"Stealth Protocol: Watch Step 1 & 2 at home (3h); solve 30 PYQs on the backbench at college."*
+2. **Collapsible/Clean "2nd PUC Board vs. JEE Twist" Insight Box:**
+   - A clean, subtle amber-tinted callout card showing the chapter's `boardTwist` text (explaining how JEE & KCET disguise questions compared to Karnataka 2nd PUC Board exams).
+3. **The 3-Step Interactive Stepper (Clean Horizontal or Vertical Cards):**
+   - **Step 1: Fast Concept & Formula Sync (1.5–2h | +20% Marks):** Checkbox + 2 sleek action buttons:
+     - `⚡ Fast Hinglish Revision` (opens `https://www.youtube.com/results?search_query=` + encoded `fastQuery`)
+     - `📚 Full One-Shot` (opens YouTube search for `fullQuery`)
+   - **Step 2: Guided PYQ Decoding Session (2h | +30% Marks — THE BRIDGE):** Checkbox + description (*"Pause on each question for 60s, spot how JEE twisted the wording, then watch the teacher solve it"*) + action button:
+     - `🔥 Watch Guided Top PYQs` (opens YouTube search for `pyqQuery`)
+   - **Step 3: Solo PYQ Grind — 35–40 Questions (3–4h | +50% Marks):** Checkbox + action buttons:
+     - `🎯 Open MARKS App` (`https://web.getmarks.app/`)
+     - `📘 NCERT PDF` (`https://ncert.nic.in/textbook.php`)
+4. **Clean Action Bar at Bottom of Active Chapter (Opens Drawers/Modals instead of cluttering the page):**
+   - `🎬 Watch Pinned Lecture (Distraction-Free Player)`: Opens a clean Modal/Slide-over where the user can paste any YouTube URL (`watch?v=...` or `youtu.be/...`), saves it to that chapter, and plays it inside an embedded `<iframe>` so they avoid YouTube's distracting sidebar/feed.
+   - `🤖 Open AI Twist Decoder Prompts`: Opens a clean Modal/Slide-over with 1-click Copy cards that dynamically inject the current chapter's title and `boardTwist` into ready-to-paste prompts for ChatGPT/Claude.
+   - `📝 Chapter Formula & Trap Scratchpad`: Expandable clean textarea that auto-saves notes for the active chapter.
+
+#### C. View 2: "Dependency Mind Map" (Visual Pipeline of All 35 Chapters)
+A clean, filterable visual map of all 35 chapters:
+- **Filter Pills at Top:** `All (35)`, `Physics (12)`, `Chemistry (13)`, `Math (9)`, `12th PUC Sync Only`, `Unfinished Only`.
+- **Visual Chain Grouping:** Group chapters by their `chain` property. Within each chain, display chapters as sleek connected pipeline cards (`Node 1 ➔ Node 2 ➔ Node 3`).
+- **Card Details:** Shows Title, `+X Marks`, Prerequisite status (e.g., if `prereq` chapter has Step 1 done, show `🔓 Unlocked`; otherwise show `🔒 Do [Prereq Title] first`), 3 mini progress dots for Step 1/2/3, and a 1-click `"Set as Active Focus"` button.
+
+#### D. View 3: "AI Twist Decoder Hub"
+A dedicated, clean view for all AI prompts dynamically bound to a selected chapter dropdown:
+1. **Prompt 1: Decode Question Twist (Board ➔ JEE/KCET):**
+   *"I am a Class 12 student (Karnataka 2nd PUC) studying [Chapter Title] ([Subject]). I know the board-level theory, but I cannot decode how this JEE/KCET question is framed. Analyze my question and tell me: 1. What hidden keyword/clue tells me which formula to use? 2. What is the twist compared to a standard board question? 3. Step-by-step solution. 4. A 1-line Mental Trigger Rule to spot this pattern in 10 seconds."*
+2. **Prompt 2: Explain via AI / Software Engineering Analogy:**
+   *"I am an AI builder studying [Chapter Title] ([Subject]) for JEE Main. Explain the core intuition, formulas, and sign conventions using analogies from software engineering, algorithms, or AI/ML. Then list the exact formulas I must memorize."*
+3. **Prompt 3: Top 10 Repeated JEE Archetypes Cheat-Sheet:**
+   *"For [Chapter Title] ([Subject]), list the Top 10 most repeated question archetypes in JEE Main (2022–2026). For each, show how the question looks, the shortcut formula, and the #1 trap students fall into (Context: [boardTwist])."*
+- Include 1-click copy buttons with a smooth `"Copied!"` state + quick launch links to ChatGPT, Claude, and Google NotebookLM.
+
+#### E. View 4: "Bug Tracker (Mistake Log)"
+A minimalist Linear-style issue tracker for wrong PYQs and Mock Test mistakes:
+- Quick inline form: Chapter selector, Bug Category (`🧩 Twist Misread`, `🧠 Formula Forgotten`, `📘 NCERT Exception`, `🔢 Calculation Bug`), and `"1-Line Mental Trigger Fix"`.
+- Filterable list of logged bugs with delete/resolve capability.
+
+---
+
+### 3. COMPLETE 35-CHAPTER HIGH-ROI DATASET (MUST INCLUDE ALL 35 ITEMS VERBATIM)
+
+Use this exact array of 35 chapters (totaling 220 JEE Main Marks):
+
+1. `p1` | Physics | `12th PUC Sync` | Marks: `12` | Prereq: `null` | Chain: `Physics 1: Modern Physics & Semiconductors (16M)`
+   - Title: `Modern Physics (Dual Nature, Atoms, Nuclei)`
+   - boardTwist: `PUC asks direct definitions or de-Broglie calculations. JEE combines Stopping Potential graphs with wavelength ratios, or compares Bohr radius/velocity/energy across H, He+, and Li2+ ions. Use shortcut hc = 12400 eV·Å!`
+   - fastQuery: `Eduniti Modern Physics Dual Nature Atoms Nuclei JEE Main revision`
+   - pyqQuery: `Eduniti Modern Physics Top PYQs JEE Main`
+   - fullQuery: `PW Manzil Modern Physics One Shot JEE Main`
+
+2. `p2` | Physics | `12th PUC Sync` | Marks: `4` | Prereq: `'p1'` | Chain: `Physics 1: Modern Physics & Semiconductors (16M)`
+   - Title: `Semiconductors, Diodes & Logic Gates`
+   - boardTwist: `PUC asks rectifier theory. JEE asks 1 guaranteed question on either Truth Table / Boolean circuit of NAND/NOR gates OR Forward/Reverse bias diode circuits where a reverse-biased diode acts as an open switch.`
+   - fastQuery: `Eduniti Semiconductors Logic Gates JEE Main revision`
+   - pyqQuery: `Eduniti Semiconductors PYQs JEE Main`
+   - fullQuery: `PW Manzil Semiconductors One Shot JEE Main`
+
+3. `p3` | Physics | `12th PUC Sync` | Marks: `8` | Prereq: `null` | Chain: `Physics 2: Class 12 Electromagnetism Core (36M)`
+   - Title: `Current Electricity & Measuring Instruments`
+   - boardTwist: `PUC asks Kirchhoff derivations. JEE twists this into Wheatstone/symmetry networks, Meter Bridge balance-point shifts when shunted, and Galvanometer to Ammeter/Voltmeter conversion numericals.`
+   - fastQuery: `Eduniti Current Electricity JEE Main revision`
+   - pyqQuery: `Eduniti Current Electricity Top PYQs JEE Main`
+   - fullQuery: `PW Manzil Current Electricity One Shot JEE Main`
+
+4. `p4` | Physics | `12th PUC Sync` | Marks: `8` | Prereq: `'p3'` | Chain: `Physics 2: Class 12 Electromagnetism Core (36M)`
+   - Title: `Electrostatics & Capacitors`
+   - boardTwist: `PUC asks Gauss Law derivations. JEE asks electric dipole torque/energy in uniform field, concentric shell potentials, and Capacitor dielectric insertion with battery connected vs disconnected.`
+   - fastQuery: `Eduniti Electrostatics and Capacitors JEE Main revision`
+   - pyqQuery: `Eduniti Electrostatics Capacitors Top PYQs JEE Main`
+   - fullQuery: `PW Manzil Electrostatics One Shot JEE Main`
+
+5. `p5` | Physics | `11th High-ROI` | Marks: `4` | Prereq: `'p4'` | Chain: `Physics 2: Class 12 Electromagnetism Core (36M)`
+   - Title: `Gravitation (Formula Twin of Electrostatics)`
+   - boardTwist: `Do immediately after Electrostatics! Replace kq1q2 with Gm1m2. JEE asks variation of g with height/depth, escape vs orbital velocity ratios, and Kepler 3rd Law (T² ∝ R³).`
+   - fastQuery: `Eduniti Gravitation JEE Main revision`
+   - pyqQuery: `Eduniti Gravitation Top PYQs JEE Main`
+   - fullQuery: `PW Manzil Gravitation One Shot JEE Main`
+
+6. `p6` | Physics | `12th PUC Sync` | Marks: `8` | Prereq: `'p3'` | Chain: `Physics 2: Class 12 Electromagnetism Core (36M)`
+   - Title: `Moving Charges & Magnetism`
+   - boardTwist: `PUC asks Biot-Savart for a circular coil. JEE combines straight wires + circular arcs at center O, circular path of charged particles in B-field (r = mv/qB), and force between parallel currents.`
+   - fastQuery: `Eduniti Moving Charges and Magnetism JEE Main revision`
+   - pyqQuery: `Eduniti Moving Charges Magnetism Top PYQs JEE Main`
+   - fullQuery: `PW Manzil Moving Charges and Magnetism One Shot`
+
+7. `p7` | Physics | `12th PUC Sync` | Marks: `8` | Prereq: `'p6'` | Chain: `Physics 2: Class 12 Electromagnetism Core (36M)`
+   - Title: `EMI, Alternating Current (AC) & EM Waves`
+   - boardTwist: `JEE asks motional EMF of rotating rod (e = ½BωL²), series LCR resonance (XL = XC), power factor cosφ, and E₀/B₀ = c with wave direction via E × B in EM Waves.`
+   - fastQuery: `Eduniti Alternating Current EMI EM Waves JEE Main revision`
+   - pyqQuery: `Eduniti Alternating Current EMI PYQs JEE Main`
+   - fullQuery: `PW Manzil Alternating Current One Shot JEE Main`
+
+8. `p8` | Physics | `12th PUC Sync` | Marks: `8` | Prereq: `null` | Chain: `Physics 3: Optics, Thermal & Mechanics Boosters (28M)`
+   - Title: `Ray Optics & Wave Optics (YDSE)`
+   - boardTwist: `Focus on Prism minimum deviation & TIR, Lens Maker formula in liquid, lens+mirror combinations, and Young Double Slit (YDSE) fringe width shift when a thin slab is inserted.`
+   - fastQuery: `Eduniti Ray Optics and Wave Optics JEE Main revision`
+   - pyqQuery: `Eduniti Ray Optics Top PYQs JEE Main`
+   - fullQuery: `PW Manzil Ray Optics One Shot JEE Main`
+
+9. `p9` | Physics | `11th High-ROI` | Marks: `8` | Prereq: `null` | Chain: `Physics 3: Optics, Thermal & Mechanics Boosters (28M)`
+   - Title: `Thermodynamics & Kinetic Theory of Gases (KTG)`
+   - boardTwist: `Super scoring! JEE asks P-V cycle work done (area), Adiabatic vs Isothermal processes, Carnot efficiency, and degrees of freedom (f) to find Cp, Cv, and γ of gas mixtures.`
+   - fastQuery: `Eduniti Thermodynamics and KTG JEE Main revision`
+   - pyqQuery: `Eduniti Thermodynamics KTG Top PYQs JEE Main`
+   - fullQuery: `PW Manzil Thermodynamics Physics One Shot JEE Main`
+
+10. `p10` | Physics | `11th High-ROI` | Marks: `4` | Prereq: `null` | Chain: `Physics 3: Optics, Thermal & Mechanics Boosters (28M)`
+    - Title: `Units, Dimensions, Errors & Vectors`
+    - boardTwist: `1 guaranteed question! JEE asks dimensions of unknown constants in equations, percentage error propagation, and Screw Gauge / Vernier Callipers readings with zero error.`
+    - fastQuery: `Eduniti Units and Dimensions Errors JEE Main revision`
+    - pyqQuery: `Eduniti Units Dimensions Errors PYQs JEE Main`
+    - fullQuery: `PW Manzil Units and Measurements One Shot`
+
+11. `p11` | Physics | `11th High-ROI` | Marks: `4` | Prereq: `'p10'` | Chain: `Physics 3: Optics, Thermal & Mechanics Boosters (28M)`
+    - Title: `Kinematics (1D, Graphs & Projectile Motion)`
+    - boardTwist: `Instead of direct equations, JEE gives v-t or a-x graphs (use a = v·dv/dx) and Projectile Motion ratios of Max Height to Range or complementary angles.`
+    - fastQuery: `Eduniti Kinematics 1D Projectile Motion JEE Main revision`
+    - pyqQuery: `Eduniti Kinematics Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Kinematics One Shot JEE Main`
+
+12. `p12` | Physics | `11th High-ROI` | Marks: `4` | Prereq: `'p11'` | Chain: `Physics 3: Optics, Thermal & Mechanics Boosters (28M)`
+    - Title: `Laws of Motion, Friction & Work-Power-Energy`
+    - boardTwist: `Focus on pulley-block constraints, pseudo force on inclines, two-block friction, and Work-Energy Theorem (Total Work = ΔKE) with variable forces.`
+    - fastQuery: `Eduniti Laws of Motion and Work Power Energy JEE Main revision`
+    - pyqQuery: `Eduniti Laws of Motion Work Energy PYQs JEE Main`
+    - fullQuery: `PW Manzil Laws of Motion One Shot JEE Main`
+
+13. `c1` | Chemistry | `11th High-ROI` | Marks: `4` | Prereq: `null` | Chain: `Chemistry 1: Inorganic Dependency Pipeline (24M)`
+    - Title: `Periodic Table & Periodicity`
+    - boardTwist: `Start Chemistry here! JEE asks Ionization Enthalpy exceptions (Be>B, N>O), Electron Gain Enthalpy order (Cl>F>Br>I), and Isoelectronic ionic radii order.`
+    - fastQuery: `Sakshi Vora Bounceback Periodic Table JEE Main`
+    - pyqQuery: `DexterChem Periodic Table PYQs JEE Main`
+    - fullQuery: `PW Manzil Periodic Table One Shot Om Pandey`
+
+14. `c2` | Chemistry | `11th High-ROI` | Marks: `8` | Prereq: `'c1'` | Chain: `Chemistry 1: Inorganic Dependency Pipeline (24M)`
+    - Title: `Chemical Bonding & Molecular Structure`
+    - boardTwist: `Backbone of Inorganic! Master VSEPR lone-pair counting & shapes (XeF4, SF4, ClF3), Dipole Moment comparisons, Hydrogen bonding, and MOT bond order & paramagnetism of O2/N2 species.`
+    - fastQuery: `Sakshi Vora Bounceback Chemical Bonding JEE Main`
+    - pyqQuery: `DexterChem Chemical Bonding Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Chemical Bonding One Shot Om Pandey`
+
+15. `c3` | Chemistry | `12th PUC Sync` | Marks: `8` | Prereq: `'c2'` | Chain: `Chemistry 1: Inorganic Dependency Pipeline (24M)`
+    - Title: `Coordination Compounds`
+    - boardTwist: `2-3 questions guaranteed! JEE twists PUC basics into Crystal Field Splitting (strong vs weak ligands: CO/CN- vs Halogens), Spin-only magnetic moment √(n(n+2)) BM, and Octahedral/Square-planar isomerism.`
+    - fastQuery: `Sakshi Vora Bounceback Coordination Compounds JEE Main`
+    - pyqQuery: `DexterChem Coordination Compounds Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Coordination Compounds One Shot`
+
+16. `c4` | Chemistry | `12th PUC Sync` | Marks: `4` | Prereq: `'c3'` | Chain: `Chemistry 1: Inorganic Dependency Pipeline (24M)`
+    - Title: `d & f Block Elements`
+    - boardTwist: `Read NCERT lines! Focus on KMnO4 & K2Cr2O7 oxidizing reactions in acidic/basic media, Lanthanoid contraction (Zr/Hf size similarity), and 3d ion colors/magnetic moments.`
+    - fastQuery: `Sakshi Vora Bounceback d and f Block Elements JEE Main`
+    - pyqQuery: `DexterChem d and f block PYQs JEE Main`
+    - fullQuery: `PW Manzil d and f Block One Shot JEE Main`
+
+17. `c5` | Chemistry | `11th High-ROI` | Marks: `4` | Prereq: `null` | Chain: `Chemistry 2: Physical Chemistry Numericals (32M)`
+    - Title: `Mole Concept, Concentration Terms & Redox`
+    - boardTwist: `Master Molarity, Molality, Mole Fraction, Limiting Reagent, and n-factor calculation here—Solutions, Electrochemistry, and Kinetics all depend on this!`
+    - fastQuery: `DexterChem Mole Concept and Redox JEE Main revision`
+    - pyqQuery: `DexterChem Mole Concept PYQs JEE Main`
+    - fullQuery: `PW Manzil Mole Concept One Shot Faisal Sir`
+
+18. `c6` | Chemistry | `12th PUC Sync` | Marks: `8` | Prereq: `'c5'` | Chain: `Chemistry 2: Physical Chemistry Numericals (32M)`
+    - Title: `Liquid Solutions & Colligative Properties`
+    - boardTwist: `PUC asks simple colligative formulas. JEE ALWAYS inserts the Van't Hoff factor (i) for dissociation/association (e.g., K4[Fe(CN)6] or acetic acid dimerization in benzene)!`
+    - fastQuery: `Sakshi Vora Bounceback Liquid Solutions JEE Main`
+    - pyqQuery: `DexterChem Liquid Solutions Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Solutions One Shot JEE Main`
+
+19. `c7` | Chemistry | `12th PUC Sync` | Marks: `8` | Prereq: `'c6'` | Chain: `Chemistry 2: Physical Chemistry Numericals (32M)`
+    - Title: `Electrochemistry`
+    - boardTwist: `Focus on Nernst Equation numericals (E = E° - (0.059/n)logQ), ΔG° = -nFE°, Kohlrausch Law for weak electrolytes, and Faraday Laws of Electrolysis.`
+    - fastQuery: `Sakshi Vora Bounceback Electrochemistry JEE Main`
+    - pyqQuery: `DexterChem Electrochemistry Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Electrochemistry One Shot JEE Main`
+
+20. `c8` | Chemistry | `12th PUC Sync` | Marks: `8` | Prereq: `'c5'` | Chain: `Chemistry 2: Physical Chemistry Numericals (32M)`
+    - Title: `Chemical Kinetics`
+    - boardTwist: `90% of JEE questions test First Order Integrated Rate Law, half-life relation (t99.9% = 10 × t50%), and Arrhenius Equation (log(k2/k1) = Ea/2.303R [1/T1 - 1/T2]).`
+    - fastQuery: `Sakshi Vora Bounceback Chemical Kinetics JEE Main`
+    - pyqQuery: `DexterChem Chemical Kinetics Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Chemical Kinetics One Shot JEE Main`
+
+21. `c9` | Chemistry | `11th High-ROI` | Marks: `4` | Prereq: `null` | Chain: `Chemistry 2: Physical Chemistry Numericals (32M)`
+    - Title: `Atomic Structure & Chemical Thermodynamics`
+    - boardTwist: `Since you did Modern Physics, Atomic Structure is 70% done! Focus on Quantum Numbers (n, l, m, s), radial/angular nodes, Hess's Law, and ΔG = ΔH - TΔS.`
+    - fastQuery: `DexterChem Atomic Structure and Thermodynamics JEE Main`
+    - pyqQuery: `DexterChem Atomic Structure PYQs JEE Main`
+    - fullQuery: `PW Manzil Atomic Structure One Shot JEE Main`
+
+22. `c10` | Chemistry | `11th High-ROI` | Marks: `8` | Prereq: `'c2'` | Chain: `Chemistry 3: Organic Chemistry Pipeline (32M - Strict Order)`
+    - Title: `General Organic Chemistry (GOC) & Isomerism`
+    - boardTwist: `DO NOT TOUCH CLASS 12 ORGANIC BEFORE THIS! Master +I/-I/+M/-M/Hyperconjugation stability of intermediates, Aromaticity (Huckel 4n+2), and Acidic/Basic strength orders.`
+    - fastQuery: `Sakshi Vora Bounceback GOC General Organic Chemistry JEE Main`
+    - pyqQuery: `DexterChem GOC Top PYQs JEE Main`
+    - fullQuery: `PW Manzil GOC One Shot Rohit Agarwal RA Sir`
+
+23. `c11` | Chemistry | `12th PUC Sync` | Marks: `8` | Prereq: `'c10'` | Chain: `Chemistry 3: Organic Chemistry Pipeline (32M - Strict Order)`
+    - Title: `Hydrocarbons + Haloalkanes & Haloarenes`
+    - boardTwist: `PUC asks isolated named reactions. JEE links them into A ➔ B ➔ C roadmaps and tests Markovnikov/Anti-Markovnikov, Ozonolysis, and SN1 vs SN2 reactivity & stereochemistry.`
+    - fastQuery: `DexterChem Hydrocarbons Haloalkanes Haloarenes JEE Main revision`
+    - pyqQuery: `DexterChem Haloalkanes Hydrocarbons PYQs JEE Main`
+    - fullQuery: `PW Manzil Haloalkanes and Haloarenes One Shot RA Sir`
+
+24. `c12` | Chemistry | `12th PUC Sync` | Marks: `8` | Prereq: `'c11'` | Chain: `Chemistry 3: Organic Chemistry Pipeline (32M - Strict Order)`
+    - Title: `Alcohols, Phenols, Ethers, Aldehydes & Ketones`
+    - boardTwist: `Focus on Reimer-Tiemann, Kolbe, Aldol Condensation, Cannizzaro, Tollens/Fehling tests, and Iodoform test. JEE loves testing selective oxidizing/reducing reagents (NaBH4 vs LiAlH4 vs PCC).`
+    - fastQuery: `DexterChem Alcohols Phenols Aldehydes Ketones JEE Main revision`
+    - pyqQuery: `DexterChem Aldehydes Ketones Alcohols PYQs JEE Main`
+    - fullQuery: `PW Manzil Aldehydes Ketones Carboxylic Acids One Shot`
+
+25. `c13` | Chemistry | `12th PUC Sync` | Marks: `8` | Prereq: `'c12'` | Chain: `Chemistry 3: Organic Chemistry Pipeline (32M - Strict Order)`
+    - Title: `Amines & Biomolecules (NCERT Goldmine)`
+    - boardTwist: `Amines: Gabriel Phthalimide, Hoffmann Bromamide, Carbylamine, Hinsberg test, Diazonium coupling. Biomolecules: Memorize NCERT tables on Vitamins, DNA/RNA, Amino Acids, and Glucose reactions!`
+    - fastQuery: `Sakshi Vora Bounceback Amines and Biomolecules JEE Main`
+    - pyqQuery: `DexterChem Amines Biomolecules PYQs JEE Main`
+    - fullQuery: `PW Manzil Amines and Biomolecules One Shot`
+
+26. `m1` | Math | `12th PUC Sync` | Marks: `8` | Prereq: `null` | Chain: `Math 1: Linear Algebra & 3D Vector Space (20M - #1 Priority)`
+    - Title: `Matrices & Determinants`
+    - boardTwist: `PUC asks simple 3x3 inverse. JEE asks Cayley-Hamilton theorem for A⁵/A⁻¹, Adjoint properties |adj(adj A)| = |A|^((n-1)²), and Cramer's Rule for No Solution / Infinite Solutions.`
+    - fastQuery: `NV Sir Bounceback Matrices and Determinants JEE Main`
+    - pyqQuery: `Neha Agrawal Matrices and Determinants Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Matrices and Determinants One Shot`
+
+27. `m2` | Math | `12th PUC Sync` | Marks: `12` | Prereq: `'m1'` | Chain: `Math 1: Linear Algebra & 3D Vector Space (20M - #1 Priority)`
+    - Title: `Vectors & 3D Geometry (Highest Weightage in JEE Math)`
+    - boardTwist: `Guaranteed 3-4 questions! Master Dot/Cross/Scalar Triple Product, Shortest Distance between skew lines (formula-based!), Foot of perpendicular / Image of a point in a line.`
+    - fastQuery: `NV Sir Bounceback Vectors and 3D Geometry JEE Main`
+    - pyqQuery: `Neha Agrawal Vectors and 3D Geometry Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Vector and 3D Geometry One Shot`
+
+28. `m3` | Math | `11th High-ROI` | Marks: `8` | Prereq: `null` | Chain: `Math 2: High-ROI Algebra & Coordinate Boosters (20M)`
+    - Title: `Statistics & Binomial Theorem`
+    - boardTwist: `Statistics gives 1 guaranteed question on Variance/Mean (especially corrected observations). Binomial Theorem: focus on General Term Tr+1, term independent of x, and Remainder problems.`
+    - fastQuery: `NV Sir Bounceback Statistics and Binomial Theorem JEE Main`
+    - pyqQuery: `Neha Agrawal Statistics Binomial Theorem PYQs JEE Main`
+    - fullQuery: `PW Manzil Statistics and Binomial Theorem One Shot`
+
+29. `m4` | Math | `11th High-ROI` | Marks: `8` | Prereq: `null` | Chain: `Math 2: High-ROI Algebra & Coordinate Boosters (20M)`
+    - Title: `Sequence & Series + Quadratic Equations`
+    - boardTwist: `Focus on AP/GP properties, AM ≥ GM inequality, Telescoping sums, and Newton's Formula for sum of powers of roots (Sn = α^n + β^n) in Quadratic Equations.`
+    - fastQuery: `NV Sir Bounceback Sequence and Series Quadratic JEE Main`
+    - pyqQuery: `Neha Agrawal Sequence and Series Quadratic PYQs JEE Main`
+    - fullQuery: `PW Manzil Sequence and Series One Shot JEE Main`
+
+30. `m5` | Math | `11th High-ROI` | Marks: `4` | Prereq: `null` | Chain: `Math 2: High-ROI Algebra & Coordinate Boosters (20M)`
+    - Title: `Straight Lines & Circles`
+    - boardTwist: `Focus on Orthocentre/Centroid/Circumcentre properties, image of a point in a line, family of lines (L1 + λL2 = 0), and chord/tangent conditions of a Circle.`
+    - fastQuery: `NV Sir Bounceback Straight Lines and Circles JEE Main`
+    - pyqQuery: `Neha Agrawal Straight Lines Circles PYQs JEE Main`
+    - fullQuery: `PW Manzil Straight Lines and Circles One Shot`
+
+31. `m6` | Math | `12th PUC Sync` | Marks: `4` | Prereq: `null` | Chain: `Math 3: Targeted Class 12 Calculus (20M)`
+    - Title: `Sets, Relations & Functions`
+    - boardTwist: `PUC asks simple equivalence checks. JEE asks counting Equivalence Relations on a set, Domain & Range tricks, Composite functions, and Functional Equations.`
+    - fastQuery: `NV Sir Bounceback Relations and Functions JEE Main`
+    - pyqQuery: `Neha Agrawal Sets Relations Functions PYQs JEE Main`
+    - fullQuery: `PW Manzil Relations and Functions One Shot`
+
+32. `m7` | Math | `12th PUC Sync` | Marks: `4` | Prereq: `'m6'` | Chain: `Math 3: Targeted Class 12 Calculus (20M)`
+    - Title: `Limits, Continuity, Differentiability & AOD`
+    - boardTwist: `Master L'Hospital Rule, 1^∞ standard limits, Taylor series expansions (sin x, cos x, e^x, ln(1+x)), piecewise continuity/differentiability, and Maxima/Minima.`
+    - fastQuery: `NV Sir Bounceback Limits Continuity Differentiability JEE Main`
+    - pyqQuery: `Neha Agrawal Limits Continuity Differentiability PYQs`
+    - fullQuery: `PW Manzil Limits Continuity Differentiability One Shot`
+
+33. `m8` | Math | `12th PUC Sync` | Marks: `8` | Prereq: `'m7'` | Chain: `Math 3: Targeted Class 12 Calculus (20M)`
+    - Title: `Definite Integration (King Rule) & Area Under Curves`
+    - boardTwist: `Skip heavy indefinite integration! 80% of JEE Definite Integration uses King Property ∫f(x)dx = ∫f(a+b-x)dx, periodic properties, or Leibniz Rule. Area Under Curve gives 1 guaranteed parabola+line question.`
+    - fastQuery: `NV Sir Bounceback Definite Integration Area Under Curve JEE Main`
+    - pyqQuery: `Neha Agrawal Definite Integration Area PYQs JEE Main`
+    - fullQuery: `PW Manzil Definite Integration One Shot JEE Main`
+
+34. `m9` | Math | `12th PUC Sync` | Marks: `4` | Prereq: `'m8'` | Chain: `Math 3: Targeted Class 12 Calculus (20M)`
+    - Title: `Differential Equations`
+    - boardTwist: `1 guaranteed question! 90% are Linear Differential Equations (dy/dx + Py = Q with Integrating Factor IF = e^(∫Pdx)) or Homogeneous/Variable Separable forms.`
+    - fastQuery: `NV Sir Bounceback Differential Equations JEE Main`
+    - pyqQuery: `Neha Agrawal Differential Equations Top PYQs JEE Main`
+    - fullQuery: `PW Manzil Differential Equations One Shot JEE Main`
+
+35. `p13` | Physics | `11th High-ROI` | Marks: `4` | Prereq: `'p12'` | Chain: `Physics 3: Optics, Thermal & Mechanics Boosters (28M)`
+    - Title: `Center of Mass, Momentum & Collisions`
+    - boardTwist: `Focus on Center of Mass of cavity/composite bodies, Conservation of Linear Momentum (explosion/recoil), and 1D Elastic vs Inelastic Collisions (coefficient of restitution e).`
+    - fastQuery: `Eduniti Center of Mass and Collisions JEE Main revision`
+    - pyqQuery: `Eduniti Center of Mass Collisions PYQs JEE Main`
+    - fullQuery: `PW Manzil Center of Mass One Shot JEE Main`

@@ -1,11 +1,23 @@
-<div align="center">
+# JEE Monk OS
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Minimalist, high-ROI execution system for **JEE Main (Target: January 20, 2027)** and **Karnataka 2nd PUC** preparation.
 
-  <h1>Built with AI Studio</h2>
+## Core Modules
+- **Zen Monk Focus**: Distraction-free active chapter execution with a 3-step stepper (Fast Concept Sync, Guided PYQ Decoding, Solo PYQ Grind), collapsible *2nd PUC Board vs. JEE Twist* insight callouts, embedded distraction-free YouTube lecture player, AI prompt drawer, and auto-saving formula scratchpad.
+- **Dependency Mind Map**: Visual pipeline of all 35 high-ROI chapters across Physics, Chemistry, and Mathematics with prerequisite unlocking and live marks tracking.
+- **AI Twist Decoder Hub**: Dynamic chapter-bound prompts for ChatGPT, Claude, and Google NotebookLM.
+- **Bug Tracker (Mistake Log)**: Issue tracker for wrong PYQs and mock test mistakes categorized by Twist Misread, Formula Forgotten, NCERT Exception, and Calculation Bug.
+- **Local Persistence**: Automatic state persistence in `localStorage` (`jee_monk_studio_v2`) with full JSON export and restore.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Getting Started
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+```bash
+npm install
+npm run dev
+```
 
-</div>
+## Running Tests
+
+```bash
+npx --yes tsx --test src/utils/monkLogic.test.ts
+```
